@@ -122,6 +122,9 @@ class RubySession:
     def require(self, arg):
         return self.send_kernel('require', arg)
 
+    def require_relative(self, arg):
+        return self.send_kernel('require_relative', arg)
+
     def const(self, const_name):
         obj = self.send_kernel( "const_get", const_name )
         return RubyObject.cast(obj)
@@ -142,7 +145,7 @@ if __name__ == "__main__":
         for k,v in parsed.items():                  # Hash of Ruby is mapped to dict of Python
             print(k, v)
 
-        rb.require('./sample_class')                # load a Ruby library 'test.rb'
+        rb.require_relative('sample_class')                # load a Ruby library 'test.rb'
         MyClass = rb.const('MyClass')               # get a Class defined in 'test.rb'
         obj = MyClass('a')                          # create an instance of MyClass
         print( obj, repr(obj) )                     # when printing a Ruby object, `to_s` method is called
