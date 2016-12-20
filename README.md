@@ -7,7 +7,7 @@ You can combine a Python script and Ruby libraries.
 
 ## Getting Started
 
-Use Ruby2. We used Ruby2.3.1 for testing.
+Use Ruby 2.x.
 
 Install the dependent gems as following.
 
@@ -16,13 +16,11 @@ gem install bundler
 bundle
 ```
 
-Use Python3. Install `msgpack-rpc-python` package.
+Use Python 3 and then install `msgpack-rpc-python` package.
 
 ```
 pip install msgpack-rpc-python
 ```
-
-We used Python 3.5.2 and msgpack-rpc-python 0.4 for testing.
 
 Execute a sample script as follows.
 
@@ -33,7 +31,7 @@ python rb_call.py
 ## Usage
 
 A sample code is the following.
-Call `RubySession()` to invoke a Ruby process. Use `with` syntax to assure that the Ruby process terminates when the script finished.
+Call `RubySession()` to invoke a Ruby process. The following sample demonstrate how to use RubySession object.
 
 ```py3
 rb = RubySession()                            # Launch a Ruby process
@@ -134,7 +132,7 @@ An instance of RubySession, `rb`, has several methods.
 ## License
 
 The MIT License (MIT)
-Copyright (c) 2016 Yohsuke Murase
+Copyright (c) 2016 RIKEN AICS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
