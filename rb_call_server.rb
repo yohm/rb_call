@@ -51,10 +51,6 @@ class RbCall
     nil
   end
 
-  def release_variables()
-    @@variables.clear
-  end
-
   def echo( args )
     args
   end

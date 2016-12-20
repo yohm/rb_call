@@ -1,12 +1,5 @@
-import subprocess
-import time
-import sys
-import os
-import inspect
-import atexit
-import msgpack
-import msgpackrpc
-
+import subprocess,time,sys,os,inspect,atexit
+import msgpack,msgpackrpc
 
 class RubyObject():
 
@@ -62,8 +55,15 @@ class RubyObject():
         return self.send('[]', index)
 
     def send(self, method, *args, **kwargs):
-        obj = self.session.send(self.obj_id, method, *args, **kwargs )
-        return self.cast(obj)
+        try:
+            obj = self.session.client.call('send_method', self.obj_id, method, args, kwargs )
+            return self.cast(obj)
+        except msgpackrpc.error.RPCError as ex:
+            arg = RubyObject.cast( ex.args[0] )
+            if isinstance( arg, RubyObject ):
+                raise RubyException( arg.message(), arg ) from None
+            else:
+                raise
 
     # msgpack-rpc-python uses `to_msgpack` method
     def to_msgpack(self):
@@ -107,16 +107,6 @@ class RubySession:
     def del_object(self, obj_id):
         return self.client.call('del_object', obj_id)
 
-    def send(self, obj_id, method, *args, **kwargs):
-        try:
-            return self.client.call('send_method', obj_id, method, args, kwargs );
-        except msgpackrpc.error.RPCError as ex:
-            arg = RubyObject.cast( ex.args[0] )
-            if isinstance( arg, RubyObject ):
-                raise RubyException( arg.message(), arg ) from None
-            else:
-                raise ex
-
     def send_kernel(self, method, *args, **kwargs):
         try:
             return self.client.call('send_method_kernel', method, args, kwargs );
@@ -125,7 +115,7 @@ class RubySession:
             if isinstance( arg, RubyObject ):
                 raise RubyException( arg.message(), arg ) from None
             else:
-                raise ex
+                raise
 
     def require(self, arg):
         return self.send_kernel('require', arg)
