@@ -61,15 +61,8 @@ class RubyObject():
         return self.send('[]', index)
 
     def send(self, method, *args, **kwargs):
-        try:
-            obj = self.session.send(self.obj_id, method, *args, **kwargs )
-            return self.cast(obj)
-        except msgpackrpc.error.RPCError as ex:
-            arg = self.cast( ex.args[0] )
-            if isinstance( arg, RubyObject ):
-                raise RubyException( arg.message(), arg ) from None
-            else:
-                raise ex
+        obj = self.session.send(self.obj_id, method, *args, **kwargs )
+        return self.cast(obj)
 
     # msgpack-rpc-python uses `to_msgpack` method
     def to_msgpack(self):
@@ -115,10 +108,24 @@ class RubySession:
         return self.client.call('del_object', obj_id)
 
     def send(self, obj_id, method, *args, **kwargs):
-        return self.client.call('send_method', obj_id, method, args, kwargs );
+        try:
+            return self.client.call('send_method', obj_id, method, args, kwargs );
+        except msgpackrpc.error.RPCError as ex:
+            arg = RubyObject.cast( ex.args[0] )
+            if isinstance( arg, RubyObject ):
+                raise RubyException( arg.message(), arg ) from None
+            else:
+                raise ex
 
     def send_kernel(self, method, *args, **kwargs):
-        return self.client.call('send_method_kernel', method, args, kwargs );
+        try:
+            return self.client.call('send_method_kernel', method, args, kwargs );
+        except msgpackrpc.error.RPCError as ex:
+            arg = RubyObject.cast( ex.args[0] )
+            if isinstance( arg, RubyObject ):
+                raise RubyException( arg.message(), arg ) from None
+            else:
+                raise ex
 
     def require(self, arg):
         return self.send_kernel('require', arg)
