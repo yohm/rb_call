@@ -36,47 +36,46 @@ A sample code is the following.
 Call `RubySession()` to invoke a Ruby process. Use `with` syntax to assure that the Ruby process terminates when the script finished.
 
 ```py3
-with RubySession() as rb:                       # Launch a Ruby process
-    rb.send_kernel("puts", "hello from python") # equivalent to `puts "hello from python"`
-    rb.require("json")                          # `require "json"`
-    JSON = rb.const('JSON')                     # get JSON class (This is a Ruby class.)
-    print( JSON.dump( ['foo','bar','baz'] ) )   # call method against JSON class
+rb = RubySession()                            # Launch a Ruby process
+rb.send_kernel("puts", "hello from python")   # equivalent to `puts "hello from python"`
+rb.require("json")                            # `require "json"`
+JSON = rb.const('JSON')                       # get JSON class (This is a Ruby class.)
+print( JSON.dump( ['foo','bar','baz'] ) )     # call method against JSON class
 
-    Dir = rb.const('Dir')                       # get another class `Dir`
-    for f in Dir.glob('*'):                     # iterate over an object of Ruby
-        print(f)                                # Array of Ruby is mapped to list of Python
+Dir = rb.const('Dir')                         # get another class `Dir`
+for f in Dir.glob('*'):                       # iterate over an object of Ruby
+    print(f)                                  # Array of Ruby is mapped to list of Python
 
-    json_string = '{"a": 1, "b":2, "c":3}'
-    parsed = JSON.load( json_string )           # parse JSON string using Ruby's JSON
-    for k,v in parsed.items():                  # Hash of Ruby is mapped to dict of Python
-        print(k, v)
+json_string = '{"a": 1, "b":2, "c":3}'
+parsed = JSON.load( json_string )             # parse JSON string using Ruby's JSON
+for k,v in parsed.items():                    # Hash of Ruby is mapped to dict of Python
+    print(k, v)
 
-    rb.require('./sample_class')                # load a Ruby library 'test.rb'
-    MyClass = rb.const('MyClass')               # get a Class defined in 'test.rb'
-    obj = MyClass('a')                          # create an instance of MyClass
-    print( obj, repr(obj) )                     # when printing a Ruby object, `to_s` method is called
-    print( obj.inspect() )                      # all Ruby methods are available.
-    print( dir(obj) )                           # dir invokes `public_methods` in Ruby
-    print( obj.m1(), obj.m2(1,2), obj.m3(3,b=4) )
-                                                # You can call Ruby methods with args. Keyword arguments are also available.
+rb.require('./sample_class')                  # load a Ruby library 'test.rb'
+MyClass = rb.const('MyClass')                 # get a Class defined in 'test.rb'
+obj = MyClass('a')                            # create an instance of MyClass
+print( obj, repr(obj) )                       # when printing a Ruby object, `to_s` method is called
+print( obj.inspect() )                        # all Ruby methods are available.
+print( dir(obj) )                             # dir invokes `public_methods` in Ruby
+print( obj.m1(), obj.m2(1,2), obj.m3(3,b=4) ) # You can call Ruby methods with args. Keyword arguments are also available.
 
-    proc = obj.m4('arg of proc')                # a Ruby method that returns a Proc
-    print( "proc:", proc() )                    # calling proc
+proc = obj.m4('arg of proc')                  # a Ruby method that returns a Proc
+print( "proc:", proc() )                      # calling proc
 
-    try:
-        obj.m2()                                # when an exception happens in Ruby, RubyException is raised
-    except RubyException as ex:
-        print( ex.args, repr(ex.rb_exception) ) # ex.args has a message from the exception object in Ruby.
+try:
+    obj.m2()                                  # when an exception happens in Ruby, RubyException is raised
+except RubyException as ex:
+    print( ex.args, repr(ex.rb_exception) )   # ex.args has a message from the exception object in Ruby.
 
-    d = MyClass.cm5()                           # Hash and Array in Ruby correspond to Dictionary and List in Python
-    print( d )                                  #   => {1: RubyObject, 2: [1, RubyObject]}
+d = MyClass.cm5()                             # Hash and Array in Ruby correspond to Dictionary and List in Python
+print( d )                                    #   => {1: RubyObject, 2: [1, RubyObject]}
 
-    e = MyClass.cm6()                           # Not only simple Array but an Enumerator is also supported
-    for i in e:                                 # You can iterate using `for` syntax over an Enumerable
-        print(i)
+e = MyClass.cm6()                             # Not only simple Array but an Enumerator is also supported
+for i in e:                                   # You can iterate using `for` syntax over an Enumerable
+    print(i)
 
-    obj2 = MyClass.cm7( obj )                   # you can pass a RubyObject as an argument
-    print( obj2 == obj )                        # If two objects refers to the same objects, they are regarded as same.
+obj2 = MyClass.cm7( obj )                     # you can pass a RubyObject as an argument
+print( obj2 == obj )                          # If two objects refers to the same objects, they are regarded as same.
 ```
 
 The code corresponds to the following Ruby code.
@@ -128,6 +127,7 @@ An instance of RubySession, `rb`, has several methods.
 
 - `send_kernel` calls the method against the Kernel object of Ruby.
 - `require` corresponds to `require` in Ruby
+- `require_relative(arg)` loads a Ruby file named ***arg*** relative to the requiring file's path.
 - `const` returns a constant in Ruby such as Class object
     - If you get a class, you can use it as if it is a Python class.
 
