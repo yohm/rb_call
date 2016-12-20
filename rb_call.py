@@ -2,6 +2,7 @@ import subprocess
 import time
 import sys
 import os
+import inspect
 import msgpack
 import msgpackrpc
 
@@ -123,7 +124,9 @@ class RubySession:
         return self.send_kernel('require', arg)
 
     def require_relative(self, arg):
-        return self.send_kernel('require_relative', arg)
+        caller_path = inspect.stack()[1][1]
+        abspath = os.path.abspath(os.path.join(os.path.dirname(caller_path), arg))
+        return self.send_kernel('require_relative', abspath)
 
     def const(self, const_name):
         obj = self.send_kernel( "const_get", const_name )
