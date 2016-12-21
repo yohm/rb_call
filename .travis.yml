@@ -11,6 +11,8 @@ install:
   - rbenv global 2.3.1
   - gem install bundler
   - bundle
-  - pip install --user msgpack-rpc-python
-script: python -m testunit discover -v
-
+  - pip install msgpack-rpc-python
+script: python -m unittest discover -v
+cache:
+  bundler: true
+  pip: true
