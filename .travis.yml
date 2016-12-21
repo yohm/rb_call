@@ -9,6 +9,8 @@ install:
   - git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
   - rbenv install 2.3.1
   - rbenv global 2.3.1
+  - gem install bundler
+  - bundle
   - pip install --user msgpack-rpc-python
 script: python -m testunit discover -v
 
