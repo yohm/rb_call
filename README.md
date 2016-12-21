@@ -1,5 +1,7 @@
 # RbCall
 
+[![Build Status](https://travis-ci.org/yohm/rb_call.svg?branch=master)](https://travis-ci.org/yohm/rb_call)
+
 ## What's this
 
 A library to call Ruby methods from a Python script.
