@@ -38,10 +38,6 @@ class RbCall
     send_impl( obj, method_name, args, kwargs )
   end
 
-  def send_method_kernel( method_name, args = [], kwargs = {} )
-    send_impl( Kernel, method_name, args, kwargs )
-  end
-
   def del_object( objid )
     @@variables[objid][1] -= 1
     if @@variables[objid][1] == 0
@@ -51,8 +47,8 @@ class RbCall
     nil
   end
 
-  def echo( args )
-    args
+  def get_kernel
+    Kernel
   end
 end
 

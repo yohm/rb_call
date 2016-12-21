@@ -93,7 +93,7 @@ class RubySession:
 
     def __init__(self):
         server_rb = os.path.abspath(os.path.join(os.path.dirname(__file__), 'rb_call_server.rb'))
-        self.proc = subprocess.Popen(['bundle','exec','ruby',server_rb], stdout=subprocess.PIPE, bufsize=0)
+        self.proc = subprocess.Popen(['bundle','exec','ruby',server_rb], stdout=subprocess.PIPE)
         def cleanup():
             RubyObject.session = None
             self.proc.terminate()
@@ -101,21 +101,14 @@ class RubySession:
         port = int( self.proc.stdout.readline() )
         self.address = msgpackrpc.Address("localhost", port)
         self.client = msgpackrpc.Client(self.address, unpack_encoding='utf-8')
-        assert self.client.call('echo', 1) == 1
         RubyObject.session = self
+        self.kernel = RubyObject.cast( self.client.call('get_kernel') )
 
     def del_object(self, obj_id):
         return self.client.call('del_object', obj_id)
 
     def send_kernel(self, method, *args, **kwargs):
-        try:
-            return self.client.call('send_method_kernel', method, args, kwargs );
-        except msgpackrpc.error.RPCError as ex:
-            arg = RubyObject.cast( ex.args[0] )
-            if isinstance( arg, RubyObject ):
-                raise RubyException( arg.message(), arg ) from None
-            else:
-                raise
+        return self.kernel.send( method, *args, **kwargs )
 
     def require(self, arg):
         return self.send_kernel('require', arg)
