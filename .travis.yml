@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.5"
+install:
+  - git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+  - echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+  - echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+  - source ~/.bash_profile
+  - git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  - rbenv install 2.3.1
+  - rbenv global 2.3.1
+  - pip install --user msgpack-rpc-python
+script: python -m testunit discover -v
+
