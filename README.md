@@ -37,7 +37,6 @@ Call `RubySession()` to invoke a Ruby process. The following sample demonstrate 
 
 ```py3
 rb = RubySession()                            # Launch a Ruby process
-rb.send_kernel("puts", "hello from python")   # equivalent to `puts "hello from python"`
 rb.require("json")                            # `require "json"`
 JSON = rb.const('JSON')                       # get JSON class (This is a Ruby class.)
 print( JSON.dump( ['foo','bar','baz'] ) )     # call method against JSON class
@@ -81,7 +80,6 @@ print( obj2 == obj )                          # If two objects refers to the sam
 The code corresponds to the following Ruby code.
 
 ```rb
-puts "hello from python"                  #    rb.send_kernel("puts", "hello from python")
 require "json"                            #    rb.require("json")
                                           #    JSON = rb.const('JSON')
 puts JSON.dump( ['foo','bar','baz'] )     #    print( JSON.dump( ['foo','bar','baz'] ) )
@@ -141,6 +139,7 @@ An instance of RubySession, `rb`, has several methods.
 - If you undefine the method `to_msgpack_ext`, it is not serialized properly by MessagePack. Do not undefine this method.
     - In some library, however, some classes undefine most of the public methods for metaprogramming. In that case, re-define `to_msgpack_ext` method again to avoid the problem.
         - One of such library is "mongoid". If you are using "mongoid", require "patch/mongoid_patch" after you required "mongoid" in your code.
+- Stdout from Ruby process is suppressed. This is because the stdout is used to tell Python process the port used by Ruby.
 
 ## Test
 

@@ -99,6 +99,7 @@ class RubySession:
             self.proc.terminate()
         atexit.register( cleanup )
         port = int( self.proc.stdout.readline() )
+        self.proc.stdout.close()
         self.address = msgpackrpc.Address("localhost", port)
         self.client = msgpackrpc.Client(self.address, unpack_encoding='utf-8')
         RubyObject.session = self
@@ -124,7 +125,6 @@ class RubySession:
 
 if __name__ == "__main__":
     rb = RubySession()
-    rb.send_kernel("puts", "hello from python") # equivalent to `puts "hello from python"`
     rb.require("json")                          # `require "json"`
     JSON = rb.const('JSON')                     # get JSON class (This is a Ruby class.)
     print( JSON.dump( ['foo','bar','baz'] ) )   # call method against JSON class

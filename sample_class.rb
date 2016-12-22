@@ -58,7 +58,6 @@ class MyClass
 end
 
 if $0 == __FILE__
-puts "hello from python"                  #    rb.send_kernel("puts", "hello from python")
 require "json"                            #    rb.require("json")
                                           #    JSON = rb.const('JSON')
 puts JSON.dump( ['foo','bar','baz'] )     #    print( JSON.dump( ['foo','bar','baz'] ) )
