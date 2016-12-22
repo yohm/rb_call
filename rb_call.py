@@ -138,8 +138,8 @@ if __name__ == "__main__":
     for k,v in parsed.items():                  # Hash of Ruby is mapped to dict of Python
         print(k, v)
 
-    rb.require_relative('sample_class')                # load a Ruby library 'test.rb'
-    MyClass = rb.const('MyClass')               # get a Class defined in 'test.rb'
+    rb.require_relative('sample_class')         # load a Ruby library 'sample_class.rb'
+    MyClass = rb.const('MyClass')               # get a Class defined in 'sample_class.rb'
     obj = MyClass('a')                          # create an instance of MyClass
     print( obj, repr(obj) )                     # when printing a Ruby object, `to_s` method is called
     print( obj.inspect() )                      # all Ruby methods are available.
