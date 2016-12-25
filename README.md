@@ -11,7 +11,7 @@ You can combine a Python script and Ruby libraries.
 
 Use Ruby 2.x.
 
-Install the dependent gems as following.
+Install the dependent gems as follows.
 
 ```
 gem install bundler
@@ -24,7 +24,7 @@ Use Python 3 and then install `msgpack-rpc-python` package.
 pip install msgpack-rpc-python
 ```
 
-Execute a sample script as follows.
+Execute a sample script.
 
 ```
 python rb_call.py
@@ -32,7 +32,7 @@ python rb_call.py
 
 ## Usage
 
-A sample code is the following.
+Here is a sample code.
 Call `RubySession()` to invoke a Ruby process. The following sample demonstrate how to use RubySession object.
 
 ```py3
@@ -131,15 +131,15 @@ An instance of RubySession, `rb`, has several methods.
 
 ## Limitations
 
+- Ruby methods which receive a block argument can not be called.
 - Python object can not be passed as an argument of Ruby methods.
-    - Python function can not either be passed as a block of Ruby methods.
 - Method calls against an instance of `RubyObject` is redirected to the corresponding object in Ruby. However, there are exceptions.
-    - Some words can not be used as a method name in Python. For instance, `rb_obj.class()` or `rb_obj.in(...)`, `rb_obj.is_a?(...)` is not a valid call in Python, causing a syntax error.
+    - Some Ruby methods can not be used as method names in Python. For instance, `rb_obj.class()`, `rb_obj.in(...)`, or `rb_obj.is_a?(...)` is not a valid call in Python, causing a syntax error.
     - To avoid this issue, use `#send` method: `rb_obj.send('class')`.
 - If you undefine the method `to_msgpack_ext`, it is not serialized properly by MessagePack. Do not undefine this method.
     - In some library, however, some classes undefine most of the public methods for metaprogramming. In that case, re-define `to_msgpack_ext` method again to avoid the problem.
         - One of such library is "mongoid". If you are using "mongoid", require "patch/mongoid_patch" after you required "mongoid" in your code.
-- Stdout from Ruby process is suppressed. This is because the stdout is used to tell Python process the port used by Ruby.
+- Stdout from the Ruby process is suppressed.
 
 ## Test
 
