@@ -41,7 +41,7 @@ class RubyObject():
         return self.send('to_s')
 
     def __repr__(self):
-        return "RubyObject( %s, %s )" % (self.rb_class, self.obj_id)
+        return self.send('inspect')
 
     def __len__(self):
         return self.send( "size" )
