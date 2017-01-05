@@ -29,7 +29,7 @@ class RubyObject():
             self.session.del_object(self.obj_id)
 
     def __eq__(self, other):
-        return isinstance(other,self.__class__) and self.obj_id == other.obj_id
+        return self.send('==', other)
 
     def __dir__(self):
         return self.send('public_methods')
