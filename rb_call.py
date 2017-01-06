@@ -93,7 +93,9 @@ class RubySession:
 
     def __init__(self):
         server_rb = os.path.abspath(os.path.join(os.path.dirname(__file__), 'rb_call_server.rb'))
-        self.proc = subprocess.Popen(['bundle','exec','ruby',server_rb], stdout=subprocess.PIPE)
+        def setpgrp():
+            os.setpgrp()
+        self.proc = subprocess.Popen(['bundle','exec','ruby',server_rb], stdout=subprocess.PIPE, preexec_fn=setpgrp)
         def cleanup():
             RubyObject.session = None
             self.proc.terminate()
