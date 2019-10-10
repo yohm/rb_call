@@ -22,7 +22,7 @@ Use Python 3 and then install the following dependencies.
 Please note that msgpack-rpc-python does not work well with msgpack-python 0.5 or later.
 
 ```
-pip install msgpack-python==0.4.8 msgpack-rpc-python==0.4.1
+pip install mprpc
 ```
 
 Execute a sample script.
