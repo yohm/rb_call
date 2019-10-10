@@ -104,7 +104,9 @@ class RubySession:
         atexit.register( cleanup )
         port = int( self.proc.stdout.readline() )
         self.proc.stdout.close()
-        self.client = mprpc.RPCClient('localhost', port)
+        def default(obj):
+            return obj.to_msgpack()
+        self.client = mprpc.RPCClient('localhost', port, pack_params = {"default": default} )
         RubyObject.session = self
         self.kernel = RubyObject.cast( self.client.call('get_kernel') )
 
