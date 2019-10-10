@@ -12,7 +12,7 @@ install:
   - rbenv global 2.3.1
   - gem install bundler
   - bundle
-  - pip install mprpc
+  - pip install --user mprpc
 script: python -m unittest discover -v
 cache:
   bundler: true
