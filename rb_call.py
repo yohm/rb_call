@@ -9,7 +9,7 @@ class RubyObject():
     def cast(obj):
         if isinstance( obj, msgpack.ExtType ):
             assert obj.code == 40
-            rb_class, obj_id = msgpack.unpackb(obj.data, encoding='utf-8')
+            rb_class, obj_id = msgpack.unpackb(obj.data, raw=False)
             return RubyObject( rb_class, obj_id )
         elif isinstance( obj, list ):
             return [ RubyObject.cast(x) for x in obj ]
@@ -106,7 +106,7 @@ class RubySession:
         self.proc.stdout.close()
         def default(obj):
             return obj.to_msgpack()
-        self.client = mprpc.RPCClient('localhost', port, pack_params = {"default": default} )
+        self.client = mprpc.RPCClient('localhost', port, pack_encoding= None, unpack_encoding=None, pack_params = {"default": default} )
         RubyObject.session = self
         self.kernel = RubyObject.cast( self.client.call('get_kernel') )
 
