@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.5"
   - "3.6"
 install:
   - git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -12,7 +11,7 @@ install:
   - rbenv global 2.3.1
   - gem install bundler
   - bundle
-  - pip install --user mprpc
+  - pip install mprpc
 script: python -m unittest discover -v
 cache:
   bundler: true
