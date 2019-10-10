@@ -106,7 +106,7 @@ class RubySession:
         self.proc.stdout.close()
         def default(obj):
             return obj.to_msgpack()
-        self.client = mprpc.RPCClient('localhost', port, pack_encoding= None, unpack_encoding=None, pack_params = {"default": default} )
+        self.client = mprpc.RPCClient('localhost', port, pack_encoding= None, unpack_encoding=None, pack_params = {"default": default}, unpack_params={"raw":False})
         RubyObject.session = self
         self.kernel = RubyObject.cast( self.client.call('get_kernel') )
 
