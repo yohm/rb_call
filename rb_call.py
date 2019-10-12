@@ -59,9 +59,10 @@ class RubyObject():
             obj = self.session.client.call('send_method', self.obj_id, method, args, kwargs )
             return self.cast(obj)
         except mprpc.exceptions.RPCError as ex:
-            matched = re.match(r'ExtType\(code=40, data=b\'(\S*)\'\)', ex.args[0])
+            # data may contain space, single-quote('), double-quote(")
+            matched = re.match(r'ExtType\(code=40, data=b(.+)\)', ex.args[0])
             if matched:
-                e = msgpack.ExtType(40, eval('b\''+matched.group(1)+'\'') )
+                e = msgpack.ExtType(40, eval('b'+matched.group(1)) )
                 arg = RubyObject.cast( e )
                 raise RubyException( arg.message(), arg ) from None
             else:
