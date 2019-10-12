@@ -19,13 +19,12 @@ bundle
 ```
 
 Use Python 3 and then install the following dependencies.
-Please note that msgpack-rpc-python does not work well with msgpack-python 0.5 or later.
 
 ```
 pip install mprpc
 ```
 
-Execute a sample script.
+To verify the installation, execute a sample script.
 
 ```
 python rb_call.py
