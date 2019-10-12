@@ -1,5 +1,5 @@
-import subprocess,time,sys,os,inspect,atexit
-import msgpack,msgpackrpc
+import subprocess,time,sys,os,inspect,atexit,re
+import msgpack,mprpc
 
 class RubyObject():
 
@@ -9,7 +9,7 @@ class RubyObject():
     def cast(obj):
         if isinstance( obj, msgpack.ExtType ):
             assert obj.code == 40
-            rb_class, obj_id = msgpack.unpackb(obj.data, encoding='utf-8')
+            rb_class, obj_id = msgpack.unpackb(obj.data, raw=False)
             return RubyObject( rb_class, obj_id )
         elif isinstance( obj, list ):
             return [ RubyObject.cast(x) for x in obj ]
@@ -58,9 +58,12 @@ class RubyObject():
         try:
             obj = self.session.client.call('send_method', self.obj_id, method, args, kwargs )
             return self.cast(obj)
-        except msgpackrpc.error.RPCError as ex:
-            arg = RubyObject.cast( ex.args[0] )
-            if isinstance( arg, RubyObject ):
+        except mprpc.exceptions.RPCError as ex:
+            # data may contain space, single-quote('), double-quote(")
+            matched = re.match(r'ExtType\(code=40, data=b(.+)\)', ex.args[0])
+            if matched:
+                e = msgpack.ExtType(40, eval('b'+matched.group(1)) )
+                arg = RubyObject.cast( e )
                 raise RubyException( arg.message(), arg ) from None
             else:
                 raise
@@ -102,8 +105,9 @@ class RubySession:
         atexit.register( cleanup )
         port = int( self.proc.stdout.readline() )
         self.proc.stdout.close()
-        self.address = msgpackrpc.Address("localhost", port)
-        self.client = msgpackrpc.Client(self.address, unpack_encoding='utf-8')
+        def default(obj):
+            return obj.to_msgpack()
+        self.client = mprpc.RPCClient('localhost', port, pack_encoding= None, unpack_encoding=None, pack_params = {"default": default}, unpack_params={"raw":False})
         RubyObject.session = self
         self.kernel = RubyObject.cast( self.client.call('get_kernel') )
 
