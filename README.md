@@ -21,7 +21,7 @@ bundle
 Use Python 3 and then install the following dependencies.
 
 ```
-pip install mprpc
+pip install msgpack-rpc-python
 ```
 
 To verify the installation, execute a sample script.
