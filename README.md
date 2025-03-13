@@ -1,6 +1,6 @@
 # RbCall
 
-[![Build Status](https://travis-ci.org/yohm/rb_call.svg?branch=master)](https://travis-ci.org/yohm/rb_call)
+![CI](https://github.com/yohm/rb_call/actions/workflows/python-app.yml/badge.svg)
 
 ## What's this
 
