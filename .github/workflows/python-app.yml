@@ -14,25 +14,21 @@ jobs:
     strategy:
       matrix:
         python-version: [3.11, 3.13]
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
     - name: Install dependencies
       run: |
-        git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-        echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
-        echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
-        source ~/.bash_profile
-        git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-        rbenv install 3.4.2
-        rbenv global 3.4.2
-        bundle
+        python -m pip install --upgrade pip
         pip install msgpack-rpc-python backports.ssl_match_hostname
-    - name: Set environment variables
-      run: echo 'export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"' >> $GITHUB_ENV
+        gem install bundler
+        bundle install
     - name: Run tests
       run: python -m unittest discover -v
