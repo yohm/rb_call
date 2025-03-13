@@ -19,9 +19,10 @@ bundle
 ```
 
 Use Python 3 and then install the following dependencies.
+(If you are using Python 3.12 or later, `backports.ssl_match_hostname` module is additionally required.)
 
 ```
-pip install msgpack-rpc-python
+pip install msgpack-rpc-python backports.ssl_match_hostname
 ```
 
 To verify the installation, execute a sample script.
