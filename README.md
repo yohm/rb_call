@@ -7,19 +7,19 @@
 A library to call Ruby methods from a Python script.
 You can combine a Python script and Ruby libraries.
 
+Python 3.x and Ruby 2.x or 3.x are supported.
+
 ## Getting Started
 
-Use Ruby 2.x.
-
-Install the dependent gems as follows.
+First, install the dependent gems as follows.
 
 ```
 gem install bundler
 bundle
 ```
 
-Use Python 3 and then install the following dependencies.
-(If you are using Python 3.12 or later, `backports.ssl_match_hostname` module is additionally required.)
+Next, install the following Python packages.
+For Python 3.11 or earlier, the backports.ssl_match_hostname module is not required, but installing it is fine.
 
 ```
 pip install msgpack-rpc-python backports.ssl_match_hostname
@@ -127,19 +127,19 @@ An instance of RubySession, `rb`, has several methods.
 - `send_kernel` calls the method against the Kernel object of Ruby.
 - `require` corresponds to `require` in Ruby
 - `require_relative(arg)` loads a Ruby file named ***arg*** relative to the requiring file's path.
-- `const` returns a constant in Ruby such as Class object
-    - If you get a class, you can use it as if it is a Python class.
+- `const` returns a constant in Ruby, such as a Class object
+    - If you get a class, you can use it as a Python class.
 
 ## Limitations
 
-- Ruby methods which receive a block argument can not be called.
+- Ruby methods that receive a block argument can not be called.
 - Python object can not be passed as an argument of Ruby methods.
-- Method calls against an instance of `RubyObject` is redirected to the corresponding object in Ruby. However, there are exceptions.
+- Method calls against an instance of `RubyObject` are redirected to the corresponding object in Ruby. However, there are exceptions.
     - Some Ruby methods can not be used as method names in Python. For instance, `rb_obj.class()`, `rb_obj.in(...)`, or `rb_obj.is_a?(...)` is not a valid call in Python, causing a syntax error.
     - To avoid this issue, use `#send` method: `rb_obj.send('class')`.
 - If you undefine the method `to_msgpack_ext`, it is not serialized properly by MessagePack. Do not undefine this method.
-    - In some library, however, some classes undefine most of the public methods for metaprogramming. In that case, re-define `to_msgpack_ext` method again to avoid the problem.
-        - One of such library is "mongoid". If you are using "mongoid", require "patch/mongoid_patch" after you required "mongoid" in your code.
+    - In some libraries, however, some classes undefine most of the public methods for metaprogramming. In that case, re-define `to_msgpack_ext` method again to avoid the problem.
+        - One of such library is "mongoid". If you are using "mongoid", require "patch/mongoid_patch" after you require "mongoid" in your code.
 - Stdout from the Ruby process is suppressed.
 
 ## Test
