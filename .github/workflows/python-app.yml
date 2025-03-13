@@ -32,5 +32,7 @@ jobs:
         rbenv global 3.4.2
         bundle
         pip install msgpack-rpc-python backports.ssl_match_hostname
+    - name: Set environment variables
+      run: echo 'export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"' >> $GITHUB_ENV
     - name: Run tests
       run: python -m unittest discover -v
